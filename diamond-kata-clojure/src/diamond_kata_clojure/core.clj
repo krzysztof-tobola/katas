@@ -17,10 +17,12 @@
   (concat (range from to) [to] (reverse (range from to))))
 
 (defn char-range [from to]
-  (apply vector (map char (range (int from) (int to)))))
+  (->> (range (int from) (int to))
+       (map char)
+       (into [])))
 
 (defn char-range-closed [from to]
-  (apply vector (map char (range (int from) (inc (int to))))))
+  (char-range from (inc (int to))))
 
 (defn letter? [letter]
   (some #{letter} (char-range-closed \A \Z)))

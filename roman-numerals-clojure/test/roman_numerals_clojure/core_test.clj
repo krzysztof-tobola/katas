@@ -2,32 +2,56 @@
   (:require [clojure.test :refer :all]
             [roman-numerals-clojure.core :refer :all]))
 
-(deftest a-test
+
+(deftest roman-to-arabic
   (testing "additive cases"
-           (is (= (to-roman 0) ""))
-           (is (= (to-roman 1) "I"))
-           (is (= (to-roman 2) "II"))
-           (is (= (to-roman 3) "III"))
-           (is (= (to-roman 5) "V"))
-           (is (= (to-roman 6) "VI"))
-           (is (= (to-roman 7) "VII"))
-           (is (= (to-roman 10) "X"))
-           (is (= (to-roman 11) "XI"))
-           (is (= (to-roman 17) "XVII"))
-           (is (= (to-roman 50) "L"))
-           (is (= (to-roman 77) "LXXVII"))
-           (is (= (to-roman 100) "C"))
-           (is (= (to-roman 500) "D"))
-           (is (= (to-roman 1000) "M"))
-           (is (= (to-roman 3000) "MMM")))
+    (are [roman arabic]
+      (= (to-arabic roman) arabic)
+      "I" 1
+      "II" 2
+      "III" 3
+      "V" 5
+      "VIII" 8
+      "MDCLXVIII" 1668))
+
+  (testing "subtractive cases"
+    (are [roman arabic]
+      (= (to-arabic roman) arabic)
+      "IV" 4
+      "IX" 9
+      "MCMIV" 1904)))
+
+(deftest arabic-to-roman
+  (testing "additive cases"
+    (are [arabic roman]
+      (= (to-roman arabic) roman)
+      0 ""
+      1 "I"
+      2 "II"
+      3 "III"
+      5 "V"
+      6 "VI"
+      7 "VII"
+      10 "X"
+      11 "XI"
+      17 "XVII"
+      50 "L"
+      77 "LXXVII"
+      100 "C"
+      500 "D"
+      1000 "M"
+      3000 "MMM"))
+
   (testing "subractive cases"
-           (is (= (to-roman 4) "IV"))
-           (is (= (to-roman 14) "XIV"))
-           (is (= (to-roman 24) "XXIV"))
-           (is (= (to-roman 40) "XL"))
-           (is (= (to-roman 9) "IX"))
-           (is (= (to-roman 41) "XLI"))
-           (is (= (to-roman 59) "LIX"))
-           (is (= (to-roman 90) "XC"))
-           (is (= (to-roman 400) "CD"))
-           (is (= (to-roman 1900) "MCM"))))
+    (are [arabic roman]
+      (= (to-roman arabic) roman)
+      4 "IV"
+      14 "XIV"
+      24 "XXIV"
+      40 "XL"
+      9 "IX"
+      41 "XLI"
+      59 "LIX"
+      90 "XC"
+      400 "CD"
+      1900 "MCM")))

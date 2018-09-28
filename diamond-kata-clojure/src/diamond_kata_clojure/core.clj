@@ -8,32 +8,31 @@
   (- (int letter) (int \A)))
 
 (defn print-with-gap [letter]
-  (let [gap (spaces (- (* 2 (letter-index letter)) 1))]
+  (let [gap (spaces (dec (* 2 (letter-index letter))))]
     (if (= letter \A)
-      "A\n"
-      (str letter gap letter "\n"))))
+      "A"
+      (str letter gap letter))))
 
-(defn mirrored [range from to]
-  (concat (range from to) [to] (reverse (range from to))))
-
-(defn char-range [from to]
-  (->> (range (int from) (int to))
-       (map char)
-       (into [])))
+(defn mirrored [xs]
+  (concat (butlast xs) (reverse xs)))
 
 (defn char-range-closed [from to]
-  (char-range from (inc (int to))))
+  (map char (range (int from) (inc (int to)))))
 
-(defn letter? [letter]
-  (some #{letter} (char-range-closed \A \Z)))
+(def letters-set (set (char-range-closed \A \Z)))
+(def letter? letters-set)
 
-(defn print-diamond [last-letter]
-  (let [print-line           (fn [letter]
-                               (str (spaces (- (letter-index last-letter) (letter-index letter)))
-                                    (print-with-gap letter)))]
+(defn format-diamond [last-letter]
+  (letfn [(format-line [letter]
+            (str (spaces (- (int last-letter) (int letter)))
+                 (print-with-gap letter)
+                 "\n"))]
     (if (letter? last-letter)
-      (apply str (map print-line (mirrored char-range \A last-letter))))))
-
+      (->>
+        (char-range-closed \A last-letter)
+        (mirrored)
+        (map format-line)
+        (apply str)))))
 
 (defn -main [x]
-  (print (print-diamond (first x))))
+  (print (format-diamond (first x))))

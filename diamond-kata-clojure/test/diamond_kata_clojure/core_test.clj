@@ -2,42 +2,36 @@
   (:require [clojure.test :refer :all]
             [diamond-kata-clojure.core :refer :all]))
 
+(defn- lines->str [& xs] (apply str (mapcat list xs (repeat "\n"))))
+
 (deftest input-validation
   (testing "Should fail when input is not a letter"
-           (is (nil? (print-diamond \1)))
-           (is (nil? (print-diamond \a)))
-           (is (nil? (print-diamond \#)))))
-
-(defn lines [& x] (apply str (map #(str % "\n") x)))
+    (are [x] (nil? (format-diamond x))
+             \1
+             \a
+             \#
+             )))
 
 (deftest printing
   (testing "Should print diamond"
-           (is (= "A\n" (print-diamond \A)))
-           (is
-            (=
-             (lines
-              " A"
-              "B B"
-              " A")
-             (print-diamond \B)))
-           (is
-            (=
-             (lines
-              "  A"
-              " B B"
-              "C   C"
-              " B B"
-              "  A")
-             (print-diamond \C)))
+    (are [y xs] (= (apply lines->str xs) (format-diamond y))
+                \A ["A"]
 
-           (is
-            (=
-             (lines
-              "   A"
-              "  B B"
-              " C   C"
-              "D     D"
-              " C   C"
-              "  B B"
-              "   A")
-             (print-diamond \D)))))
+                \B [" A"
+                    "B B"
+                    " A"]
+
+                \C ["  A"
+                    " B B"
+                    "C   C"
+                    " B B"
+                    "  A"]
+
+                \D ["   A"
+                    "  B B"
+                    " C   C"
+                    "D     D"
+                    " C   C"
+                    "  B B"
+                    "   A"]
+                )))
